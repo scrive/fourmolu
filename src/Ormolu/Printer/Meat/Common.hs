@@ -148,13 +148,14 @@ p_hsDocString hstyle needsNewline (L l str) = do
   when goesAfterComment newline
   let txt' x = unless (T.null x) (txt x)
       docLines = splitDocString str
-      body s = do
-        txt $ case hstyle of
-          Pipe -> " |"
-          Caret -> " ^"
-          Asterisk n -> " " <> T.replicate n "*"
-          Named name -> " $" <> T.pack name
-        sequence_ $ intersperse (newline >> s) $ map txt' docLines
+      bodyStart s =
+        T.append s $
+          case hstyle of
+            Pipe -> " |"
+            Caret -> " ^"
+            Asterisk n -> " " <> T.replicate n "*"
+            Named name -> " $" <> T.pack name
+      body s = sequence_ $ intersperse (newline >> s) $ map txt' docLines
   single <-
     getPrinterOpt poHaddockStyle >>= \case
       HaddockSingleLine -> pure True
@@ -162,15 +163,15 @@ p_hsDocString hstyle needsNewline (L l str) = do
       HaddockMultiLine -> maybe False ((> 1) . srcSpanStartCol) <$> getSrcSpan l
   if single
     then do
-      txt "--"
+      txt $ bodyStart "--"
       body $ txt "--"
     else
       if length docLines <= 1
         then do
-          txt "--"
+          txt $ bodyStart "--"
           body $ pure ()
         else do
-          txt "{-"
+          txt $ bodyStart "{-"
           body $ pure ()
           newline
           txt "-}"
