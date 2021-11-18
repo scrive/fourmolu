@@ -150,12 +150,12 @@ p_hsDocString hstyle needsNewline (L l str) = do
   let txt' x = unless (T.null x) (txt x)
       docLines = splitDocString str
       bodyStart s =
-        T.append s $
+        T.append (s <> " ") $
           case hstyle of
-            Pipe -> " |"
-            Caret -> " ^"
-            Asterisk n -> " " <> T.replicate n "*"
-            Named name -> " $" <> T.pack name
+            Pipe -> "|"
+            Caret -> "^"
+            Asterisk n -> T.replicate n "*"
+            Named name -> "$" <> T.pack name
       body s = sequence_ $ intersperse (newline >> s) $ map txt' docLines
   single <-
     getPrinterOpt poHaddockStyle >>= \case
