@@ -170,7 +170,10 @@ p_hsDocString hstyle needsNewline (L l str) = do
           txt $ bodyStart "--"
           body $ pure ()
       | otherwise -> do
-          txt $ bodyStart "{-"
+          txt $
+            case hstyle of
+              Pipe -> "{-|"
+              _ -> bodyStart "{-"
           body $ pure ()
           newline
           txt "-}"
