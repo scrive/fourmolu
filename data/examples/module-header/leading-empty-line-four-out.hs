@@ -1,4 +1,4 @@
-{- |
+{-|
  Module      :  Text.Megaparsec
  Copyright   :  © 2015–2019 Megaparsec contributors
                 © 2007 Paolo Martini
