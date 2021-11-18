@@ -1,4 +1,5 @@
 {-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE MultiWayIf #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -161,16 +162,14 @@ p_hsDocString hstyle needsNewline (L l str) = do
       HaddockSingleLine -> pure True
       -- Use multiple single-line comments when the whole comment is indented
       HaddockMultiLine -> maybe False ((> 1) . srcSpanStartCol) <$> getSrcSpan l
-  if single
-    then do
-      txt $ bodyStart "--"
-      body $ txt "--"
-    else
-      if length docLines <= 1
-        then do
+  if
+      | single -> do
+          txt $ bodyStart "--"
+          body $ txt "--"
+      | length docLines <= 1 -> do
           txt $ bodyStart "--"
           body $ pure ()
-        else do
+      | otherwise -> do
           txt $ bodyStart "{-"
           body $ pure ()
           newline
