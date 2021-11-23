@@ -63,7 +63,7 @@ import Control.Monad.Reader
 import Control.Monad.State.Strict
 import Data.Bool (bool)
 import Data.Coerce
-import Data.Functor.Identity (runIdentity)
+import Data.Functor.Identity (Identity, runIdentity)
 import Data.Maybe (listToMaybe)
 import Data.Text (Text)
 import qualified Data.Text as T
@@ -469,7 +469,7 @@ getLayout :: R Layout
 getLayout = R (asks rcLayout)
 
 -- | Get a particular 'PrinterOpts' field from the environment.
-getPrinterOpt :: (forall f. PrinterOpts f -> f a) -> R a
+getPrinterOpt :: (PrinterOptsTotal -> Identity a) -> R a
 getPrinterOpt f = R $ asks $ runIdentity . f . rcPrinterOpts
 
 ----------------------------------------------------------------------------
