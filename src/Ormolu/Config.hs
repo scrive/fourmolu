@@ -213,6 +213,7 @@ instance FromJSON CommaStyle where
 data HaddockPrintStyle
   = HaddockSingleLine
   | HaddockMultiLine
+  | HaddockMultiLineCompact
   deriving (Eq, Ord, Show, Generic, Bounded, Enum)
 
 instance FromJSON HaddockPrintStyle where

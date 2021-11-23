@@ -1,3 +1,7 @@
+## Unreleased
+
+* Add `multi-line-compact` option to `haddock-style` that will output `{-|` for multiline haddocks instead of `{- |` ([#130](https://github.com/fourmolu/fourmolu/pull/130))
+
 ## Fourmolu 0.5.0.0
 
 * Fixed issue with leading commas in guards ([#123](https://github.com/fourmolu/fourmolu/pull/123))

@@ -1,4 +1,4 @@
-{-|
+{- |
 Module:      Data.Aeson.TH
 Copyright:   (c) 2011-2016 Bryan O'Sullivan
              (c) 2011 MailRank, Inc.
@@ -8,7 +8,7 @@ Portability: portable
 -}
 module Main where
 
-{-|
+{- |
 
 Here is a snippet:
 

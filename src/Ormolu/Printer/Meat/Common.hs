@@ -157,11 +157,13 @@ p_hsDocString hstyle needsNewline (L l str) = do
             Asterisk n -> T.replicate n "*"
             Named name -> "$" <> T.pack name
       body s = sequence_ $ intersperse (newline >> s) $ map txt' docLines
+  haddockStyle <- getPrinterOpt poHaddockStyle
   single <-
-    getPrinterOpt poHaddockStyle >>= \case
+    case haddockStyle of
       HaddockSingleLine -> pure True
       -- Use multiple single-line comments when the whole comment is indented
-      HaddockMultiLine -> maybe False ((> 1) . srcSpanStartCol) <$> getSrcSpan l
+      HaddockMultiLine -> isIndented
+      HaddockMultiLineCompact -> isIndented
   if
       | single -> do
           txt $ bodyStart "--"
@@ -171,8 +173,8 @@ p_hsDocString hstyle needsNewline (L l str) = do
           body $ pure ()
       | otherwise -> do
           txt $
-            case hstyle of
-              Pipe -> "{-|"
+            case (hstyle, haddockStyle) of
+              (Pipe, HaddockMultiLineCompact) -> "{-|"
               _ -> bodyStart "{-"
           body $ pure ()
           newline
@@ -181,6 +183,7 @@ p_hsDocString hstyle needsNewline (L l str) = do
   when needsNewline newline
   getSrcSpan l >>= mapM_ (setSpanMark . HaddockSpan hstyle)
   where
+    isIndented = maybe False ((> 1) . srcSpanStartCol) <$> getSrcSpan l
     getSrcSpan = \case
       -- It's often the case that the comment itself doesn't have a span
       -- attached to it and instead its location can be obtained from

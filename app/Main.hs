@@ -447,6 +447,7 @@ instance ToCLIArgument Int where
 instance ToCLIArgument HaddockPrintStyle where
   toCLIArgument HaddockSingleLine = "single-line"
   toCLIArgument HaddockMultiLine = "multi-line"
+  toCLIArgument HaddockMultiLineCompact = "multi-line-compact"
 
 instance ToCLIArgument Mode where
   toCLIArgument Stdout = "stdout"
