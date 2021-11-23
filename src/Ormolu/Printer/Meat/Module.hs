@@ -9,6 +9,7 @@ module Ormolu.Printer.Meat.Module
 where
 
 import Control.Monad
+import Data.Maybe (fromMaybe)
 import GHC.Hs hiding (comment)
 import GHC.Types.SrcLoc
 import Ormolu.Config
@@ -47,7 +48,8 @@ p_hsModule mstackHeader pragmas HsModule {..} = do
       Nothing -> return ()
       Just hsmodName' -> do
         located hsmodName' $ \name -> do
-          forM_ hsmodHaddockModHeader (p_hsDocString Pipe True)
+          poHStyle <- getPrinterOpt poHaddockStyleModuleResolved
+          forM_ hsmodHaddockModHeader (p_hsDocString' poHStyle Pipe True)
           p_hsmodName name
         forM_ hsmodDeprecMessage $ \w -> do
           breakpoint
@@ -77,3 +79,6 @@ p_hsModule mstackHeader pragmas HsModule {..} = do
       (if preserveSpacing then p_hsDeclsRespectGrouping else p_hsDecls) Free hsmodDecls
       newline
       spitRemainingComments
+  where
+    poHaddockStyleModuleResolved PrinterOpts {..} =
+      fromMaybe <$> poHaddockStyle <*> poHaddockStyleModule

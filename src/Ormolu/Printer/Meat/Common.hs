@@ -11,6 +11,7 @@ module Ormolu.Printer.Meat.Common
     p_qualName,
     p_infixDefHelper,
     p_hsDocString,
+    p_hsDocString',
     p_sourceText,
   )
 where
@@ -138,7 +139,22 @@ p_hsDocString ::
   -- | The doc string to render
   LHsDocString ->
   R ()
-p_hsDocString hstyle needsNewline (L l str) = do
+p_hsDocString hstyle needsNewline lstr = do
+  poHStyle <- getPrinterOpt poHaddockStyle
+  p_hsDocString' poHStyle hstyle needsNewline lstr
+
+-- | Print a Haddock.
+p_hsDocString' ::
+  -- | 'haddock-style' configuration option
+  HaddockPrintStyle ->
+  -- | Haddock style
+  HaddockStyle ->
+  -- | Finish the doc string with a newline
+  Bool ->
+  -- | The doc string to render
+  LHsDocString ->
+  R ()
+p_hsDocString' poHStyle hstyle needsNewline (L l str) = do
   let isCommentSpan = \case
         HaddockSpan _ _ -> True
         CommentSpan _ -> True
@@ -156,7 +172,7 @@ p_hsDocString hstyle needsNewline (L l str) = do
           Named name -> " $" <> T.pack name
         sequence_ $ intersperse (newline >> s) $ map txt' docLines
   single <-
-    getPrinterOpt poHaddockStyle >>= \case
+    case poHStyle of
       HaddockSingleLine -> pure True
       -- Use multiple single-line comments when the whole comment is indented
       HaddockMultiLine -> maybe False ((> 1) . srcSpanStartCol) <$> getSrcSpan l
