@@ -376,6 +376,12 @@ printerOptsParser = do
             <> showAllValues @HaddockPrintStyle
             <> showDefaultValue poHaddockStyle
       ]
+  poHaddockStyleModule <-
+    (optional . option (Just <$> parseBoundedEnum) . mconcat)
+      [ long "haddock-style-module",
+        metavar "STYLE",
+        help "How to print module docstring (defaults to 'haddock-style' setting)"
+      ]
   poNewlinesBetweenDecls <-
     (optional . option auto . mconcat)
       [ long "newlines-between-decls",
