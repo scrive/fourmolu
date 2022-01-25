@@ -37,9 +37,9 @@ data PrinterOpts f = PrinterOpts
 data CommaStyle
   = Leading
   | Trailing
-  deriving (Eq, Ord, Show, Generic, Bounded, Enum)
+  deriving (Eq, Show)
 
 data HaddockPrintStyle
   = HaddockSingleLine
   | HaddockMultiLine
-  deriving (Eq, Ord, Show, Generic, Bounded, Enum)
+  deriving (Eq, Show)
