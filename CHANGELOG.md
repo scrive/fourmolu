@@ -10,6 +10,7 @@
     - 'infixr 8 .='
     - 'infixr 5 #'
   ```
+* Multiline haddock comments with consecutive empty newlines will no longer report an "AST differs" error ([#172](https://github.com/fourmolu/fourmolu/issues/172))
 
 #### Ormolu 0.5.0.0
 
